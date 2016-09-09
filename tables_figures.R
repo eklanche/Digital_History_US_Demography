@@ -5,6 +5,9 @@ library(dplyr)
 library(readr)
 library(ggplot2)
 
+articles <- read_csv('./jstor/2015/articles.csv')
+articles <- mutate(articles,doi=gsub('/','_',doi))
+
 #1915-1946-----------------------------------------------------------------------------
 meta <- read_csv('./jstor/2015/meta.csv')
 auths <- read_csv('./jstor/2015/authors.csv')
@@ -34,8 +37,105 @@ docdoi <- read_csv('./jstor/2015/topic-docs-200.csv')
 #articles by demographers before 1947
 ear <- as.data.frame(unique(ed$doi))
 names(ear) <- c('doi')
-ear <- mutate(ear,doi=gsub('/','_',doi))
+ear <- mutate(ear,doi=gsub('/','_',doi),field='demographers')
+ear <- merge(ear,select(articles,doi,year),by='doi',all.x=TRUE)
 ear <- merge(ear,docdoi,by='doi',all.x=TRUE)
+
+#articles by non-demographers before 1947
+other <- as.data.frame(unique(oth$doi))
+names(other) <- c('doi')
+other <- mutate(other,doi=gsub('/','_',doi),field='other social scientists')
+other <- merge(other,select(articles,doi,year),by='doi',all.x=TRUE)
+other <- merge(other,docdoi,by='doi',all.x=TRUE)
+
+#all articles before 1947
+arts <- rbind(ear,other) %>% mutate(articles=1) %>% group_by(year,field) %>% summarize(articles=sum(articles))
+png('./fig_a.png',height=500,width=1000)
+ggplot(data=arts,aes(x=year,y=articles,color=field)) + geom_line() + theme_bw() + 
+  labs(x='Year',y='Number of Articles',title='Figure 2: Population-Related Articles by Author Field, 1915-1946',color='Field:') + 
+  scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom") 
+dev.off()
+
+#articles before 1947 by field
+b <- data.frame(year=integer(),field=character(),topic=numeric(),size=numeric())
+for(i in 1:200) {
+  a <- as.data.frame(ear[,(i+3)])
+  c <- ear %>% select(year,field)
+  a <- cbind(c,a)
+  names(a) <- c('year','field','size')
+  a$arts <- 1
+  a$topic <- i
+  a <- summarise(group_by(a,year,field,topic),size=sum(size)/sum(arts))
+  b <- rbind(as.data.frame(b),as.data.frame(a))
+}
+for(i in 1:200) {
+  a <- as.data.frame(other[,(i+3)])
+  c <- other %>% select(year,field)
+  a <- cbind(c,a)
+  names(a) <- c('year','field','size')
+  a$arts <- 1
+  a$topic <- i
+  a <- summarise(group_by(a,year,field,topic),size=sum(size)/sum(arts))
+  b <- rbind(as.data.frame(b),as.data.frame(a))
+}
+
+#Topics more prevalent in demography
+census <- b %>% filter(topic %in% c(160,56)) %>% mutate(top=ifelse(topic==160,'census information statistics persons bureau statistical censuses records sources enumeration',
+                                                        'survey sample surveys respondents interview questions response sampling bias information'))
+png('./fig_b.png',height=500,width=1000)
+ggplot(data=census,aes(x=year,y=size,color=field)) + geom_line() + 
+  facet_wrap(~ top) + theme_bw() + scale_y_continuous(labels=scales::percent) +
+  labs(x='Year',y='Percent of Field',title='Figure 3: Topics More Prevalent in Demography, 1915-1946: Censuses, Surveys, Population Data',color='Field:') + 
+  scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom")
+dev.off()
+
+vital <- b %>% filter(topic %in% c(164,51,26,120)) %>% mutate(top=ifelse(topic==164,'rate rates increase year total birth period million average table',
+                                                                  ifelse(topic==51,'age mortality table estimates ages life method populations estimated estimate',
+                                                                  ifelse(topic==26,'rates rate year period figure total average higher annual ratio',
+                                                                         'life mortality age expectancy death ages survival tables longevity birth'))))
+png('./fig_c.png',height=500,width=1000)
+ggplot(data=vital,aes(x=year,y=size,color=field)) + geom_line() + 
+  facet_wrap(~ top) + theme_bw() + scale_y_continuous(labels=scales::percent) +
+  labs(x='Year',y='Percent of Field',title='Figure 3: Topics More Prevalent in Demography, 1915-1946: Age-specific vital rates',color='Field:') + 
+  scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom")
+dev.off()
+
+projection <- b %>% filter(topic %in% c(189,143,121)) %>% mutate(top=ifelse(topic==189,'demographic projections future size growth projection projected populations structure current',
+                                                                     ifelse(topic==143,'fertility demographic decline levels transition low control economic reproductive childbearing',
+                                                                            'growth economic development national economy capita industrial capital investment rapid')))
+png('./fig_d.png',height=500,width=1000)
+ggplot(data=projection,aes(x=year,y=size,color=field)) + geom_line() + 
+  facet_wrap(~ top) + theme_bw() + scale_y_continuous(labels=scales::percent) +
+  labs(x='Year',y='Percent of Field',title='Figure 3: Topics More Prevalent in Demography, 1915-1946: Population projection and demographic transition',color='Field:') + 
+  scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom")
+dev.off()
+
+fertility <- b %>% filter(topic %in% c(129,47)) %>% mutate(top=ifelse(topic==129,'birth births parity interval months order intervals live conception born',
+                                                                      'contraceptive method contraception methods contraceptives pill pregnancy users women practice'))
+png('./fig_e.png',height=500,width=1000)
+ggplot(data=fertility,aes(x=year,y=size,color=field)) + geom_line() + 
+  facet_wrap(~ top) + theme_bw() + scale_y_continuous(labels=scales::percent) +
+  labs(x='Year',y='Percent of Field',title='Figure 3: Topics More Prevalent in Demography, 1915-1946: Fertility and contraception',color='Field:') + 
+  scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom")
+dev.off()
+
+
+
+#sociology
+stops <- c(24,30,124) #topics more prevalent in sociology
+soc <- all %>% filter(topic %in% stops) #keep only topics more prevalent in sociology
+#add topic labels
+soc <- soc %>% mutate(top=ifelse(topic==24,'items table sample scale behavior scores subjects significant',
+                                 ifelse(topic==30,'areas city metropolitan segregation cities area residential central',
+                                        ifelse(topic==124,'mobility occupational status occupation occupations prestige american',''))))
+png('./fig4.png',height=250,width=1000)
+ggplot(data=soc,aes(x=year,y=size,color=field)) + geom_line() + 
+  facet_wrap(~ top) + theme_bw() + scale_y_continuous(labels=scales::percent) +
+  labs(x='Year',y='Percent of Field',title='Figure 4: Topics More Prevalent in Sociology, 1947-1984',color='Field:') + 
+  scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom")
+dev.off()   
+
+
 b <- data.frame(topic=numeric(),size=numeric())
 for(i in 1:200) {
   a <- as.data.frame(ear[,i+1])
@@ -93,9 +193,6 @@ t3 <- filter(all, topic %in% c(146,185,131,192))
 
 
 #1947-1984------------------------------------------------
-articles <- read_csv('./jstor/2015/articles.csv')
-articles <- mutate(articles,doi=gsub('/','_',doi))
-
 keep <- select(filter(articles,field %in% c('demography','sociology') & year >= 1947 & year <= 1984),field,year,doi,journal)
 keepd <- filter(keep,field=='demography')
 keeps <- filter(keep,(journal %in% c("INTERNATIONAL JOURNAL OF SOCIOLOGY",
