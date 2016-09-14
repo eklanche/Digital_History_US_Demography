@@ -185,7 +185,7 @@ other <- other%>% mutate(top=ifelse(topic==146,'marriage kinship kin sons son da
                               ifelse(topic==192,'school education schools primary educational secondary girls teachers',
                               ifelse(topic==88,'immigration illegal aliens legal citizens citizenship alien status',
                               'japan trade japanese foreign economic exports countries investment'))))))
-png('./fig4.png',height=500,width=1000)
+png('./fig4.png',height=1000,width=750)
 ggplot(data=other,aes(x=year,y=size,color=field)) + geom_line() + 
   facet_wrap(~ top,nrow=3) + theme_bw() + scale_y_continuous(labels=scales::percent) +
   labs(x='Year',y='Percent of Field (3-year moving average)',title='Figure 4: Topics More Prevalent in Other Social Sciences, 1915-1946',color='Field:') + 
@@ -305,7 +305,7 @@ soc$top=factor(soc$top, labels=c('items table sample scale behavior scores subje
                                 'society cultural traditional culture system societies values life',
                                 'marriage family adjustment marital marriage counseling living life',
                                 'religious religion catholic church catholics attendance religiosity'))
-png('./fig7.png',height=250,width=1000)
+png('./fig7.png',height=1000,width=750)
 ggplot(data=soc,aes(x=year,y=size,color=field)) + geom_line() + 
   facet_wrap(~ top,nrow=3) + theme_bw() + scale_y_continuous(labels=scales::percent) +
   labs(x='Year',y='Percent of Field',title='Figure 7: Topics More Prevalent in Sociology, 1947-1984',color='Field:') + 
