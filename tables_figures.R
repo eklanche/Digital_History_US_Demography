@@ -52,7 +52,7 @@ ggplot(data=race,aes(x=year,y=size,color=topic, order=-as.numeric(topic))) + geo
   labs(x='Year',y='Number of Articles',title='Figure 1: Vocabularies of Racial Inequality',color='Topic:') + 
   scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom") +
   guides(color=guide_legend(nrow=2)) + scale_y_continuous(limits=c(0,10),breaks=c(0,2,4,6,8,10)) +
-  scale_x_continuous(limits=c(1915,1984),breaks=c(1915,1935,1955,1975))
+  scale_x_continuous(limits=c(1915,1985),breaks=seq(1915,1985,5))
 dev.off()
 
 #1915-1946-----------------------------------------------------------------------------
@@ -100,7 +100,8 @@ arts <- rbind(ear,other) %>% mutate(articles=1) %>% group_by(year,field) %>% sum
 png('./fig2.png',height=500,width=1000)
 ggplot(data=arts,aes(x=year,y=articles,color=field)) + geom_line() + theme_bw() + 
   labs(x='Year',y='Number of Articles',title='Figure 2: Population-Related Articles by Author Field, 1915-1946',color='Field:') + 
-  scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom") 
+  scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom") +
+  scale_x_continuous(breaks=seq(1915,1945,5))
 dev.off()
 
 #export pre-1947 data
@@ -173,7 +174,8 @@ png('./fig3.png',height=1000,width=750)
 ggplot(data=demog,aes(x=year,y=size,color=field)) + geom_line() + 
   facet_wrap(~ top,nrow=3,scales="free_y") + theme_bw() + scale_y_continuous(labels=scales::percent) +
   labs(x='Year',y='Percent of Field (3-year moving average)',title='Figure 3: Topics More Prevalent in Demography, 1915-1946',color='Field:') + 
-  scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom")
+  scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom") +
+  scale_x_continuous(breaks=seq(1915,1945,5))
 dev.off()
 
 #Topics more prevalent in other fields
@@ -189,7 +191,8 @@ png('./fig4.png',height=1000,width=750)
 ggplot(data=other,aes(x=year,y=size,color=field)) + geom_line() + 
   facet_wrap(~ top,nrow=3,scales="free_y") + theme_bw() + scale_y_continuous(labels=scales::percent) +
   labs(x='Year',y='Percent of Field (3-year moving average)',title='Figure 4: Topics More Prevalent in Other Social Sciences, 1915-1946',color='Field:') + 
-  scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom")
+  scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom") +
+  scale_x_continuous(breaks=seq(1915,1945,5))
 dev.off()
 
 #1947-1984------------------------------------------------
@@ -271,7 +274,8 @@ arts <- select(keep,field,year,art) %>% group_by(year,field) %>%summarise(articl
 png('./fig5.png',height=500,width=1000)
 ggplot(data=arts,aes(x=year,y=articles,color=field)) + geom_line() + theme_bw() + 
   labs(x='Year',y='Number of Articles',title='Figure 5: Population-Related Articles by Journal Field, 1947-1984',color='Field:') + 
-  scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom")
+  scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom") +
+  scale_x_continuous(breaks=seq(1945,1985,5))
 dev.off()
 
 #figure 6
@@ -288,7 +292,8 @@ png('./fig6.png',height=1000,width=750)
 ggplot(data=demog,aes(x=year,y=size,color=field)) + geom_line() + 
   facet_wrap(~ top,nrow=3,scales="free_y") + theme_bw() + scale_y_continuous(labels=scales::percent) +
   labs(x='Year',y='Percent of Field',title='Figure 6: Topics More Prevalent in Demography, 1947-1984',color='Field:') + 
-  scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom")
+  scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom") +
+  scale_x_continuous(breaks=seq(1945,1985,5))
 dev.off()
 
 #figure 7
@@ -309,7 +314,8 @@ png('./fig7.png',height=1000,width=750)
 ggplot(data=soc,aes(x=year,y=size,color=field)) + geom_line() + 
   facet_wrap(~ top,nrow=3,scales="free_y") + theme_bw() + scale_y_continuous(labels=scales::percent) +
   labs(x='Year',y='Percent of Field',title='Figure 7: Topics More Prevalent in Sociology, 1947-1984',color='Field:') + 
-  scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom")
+  scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom") +
+  scale_x_continuous(breaks=seq(1945,1985,5))
 dev.off()   
 
 #export data
