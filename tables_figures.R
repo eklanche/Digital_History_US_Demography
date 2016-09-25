@@ -171,7 +171,7 @@ demog$top <- factor(demog$top,labels=c('rate rates increase year total birth per
                                         'contraceptive method contraception methods contraceptives pill pregnancy'))
 png('./fig3.png',height=1000,width=750)
 ggplot(data=demog,aes(x=year,y=size,color=field)) + geom_line() + 
-  facet_wrap(~ top,nrow=3) + theme_bw() + scale_y_continuous(labels=scales::percent) +
+  facet_wrap(~ top,nrow=3,scales="free_y") + theme_bw() + scale_y_continuous(labels=scales::percent) +
   labs(x='Year',y='Percent of Field (3-year moving average)',title='Figure 3: Topics More Prevalent in Demography, 1915-1946',color='Field:') + 
   scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom")
 dev.off()
@@ -187,7 +187,7 @@ other <- other%>% mutate(top=ifelse(topic==146,'marriage kinship kin sons son da
                               'japan trade japanese foreign economic exports countries investment'))))))
 png('./fig4.png',height=1000,width=750)
 ggplot(data=other,aes(x=year,y=size,color=field)) + geom_line() + 
-  facet_wrap(~ top,nrow=3) + theme_bw() + scale_y_continuous(labels=scales::percent) +
+  facet_wrap(~ top,nrow=3,scales="free_y") + theme_bw() + scale_y_continuous(labels=scales::percent) +
   labs(x='Year',y='Percent of Field (3-year moving average)',title='Figure 4: Topics More Prevalent in Other Social Sciences, 1915-1946',color='Field:') + 
   scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom")
 dev.off()
@@ -286,7 +286,7 @@ demog <- demog %>% mutate(top=ifelse(topic==47,'contraceptive method contracepti
                               ifelse(topic==87,'reproductive infertility menstrual reproduction cycle human days cycles','')))))))
 png('./fig6.png',height=1000,width=750)
 ggplot(data=demog,aes(x=year,y=size,color=field)) + geom_line() + 
-  facet_wrap(~ top,nrow=3) + theme_bw() + scale_y_continuous(labels=scales::percent) +
+  facet_wrap(~ top,nrow=3,scales="free_y") + theme_bw() + scale_y_continuous(labels=scales::percent) +
   labs(x='Year',y='Percent of Field',title='Figure 6: Topics More Prevalent in Demography, 1947-1984',color='Field:') + 
   scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom")
 dev.off()
@@ -307,7 +307,7 @@ soc$top=factor(soc$top, labels=c('items table sample scale behavior scores subje
                                 'religious religion catholic church catholics attendance religiosity'))
 png('./fig7.png',height=1000,width=750)
 ggplot(data=soc,aes(x=year,y=size,color=field)) + geom_line() + 
-  facet_wrap(~ top,nrow=3) + theme_bw() + scale_y_continuous(labels=scales::percent) +
+  facet_wrap(~ top,nrow=3,scales="free_y") + theme_bw() + scale_y_continuous(labels=scales::percent) +
   labs(x='Year',y='Percent of Field',title='Figure 7: Topics More Prevalent in Sociology, 1947-1984',color='Field:') + 
   scale_color_manual(values=c("black", "gray50")) + theme(legend.position="bottom")
 dev.off()   
