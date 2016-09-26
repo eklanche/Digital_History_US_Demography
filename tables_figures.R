@@ -159,10 +159,10 @@ for(i in 1916:1945) {
 }
 
 #Topics more prevalent in demography
-demog <- c %>% filter(topic %in% c(164,51,189,121,129,47)) 
+demog <- c %>% filter(topic %in% c(164,51,189,143,129,47)) 
 #create factor variable for topic words to control graphing order
 demog <- demog %>% mutate(top=ifelse(topic==164,1,ifelse(topic==51,2,
-                              ifelse(topic==189,3,ifelse(topic==121,4,
+                              ifelse(topic==189,3,ifelse(topic==143,4,
                               ifelse(topic==129,5,6))))))
 demog$top <- factor(demog$top,labels=c('rate rates increase year total birth period million average table',
                                         'age mortality table estimates ages life method populations estimated',
@@ -179,10 +179,10 @@ ggplot(data=demog,aes(x=year,y=size,color=field)) + geom_line() +
 dev.off()
 
 #Topics more prevalent in other fields
-other <- c %>% filter(topic %in% c(146,185,131,192,88,111)) 
+other <- c %>% filter(topic %in% c(146,45,131,192,88,111)) 
 #add topic words
 other <- other%>% mutate(top=ifelse(topic==146,'marriage kinship kin sons son daughters father property residence',
-                              ifelse(topic==185,'society cultural traditional culture system societies values life modern',
+                              ifelse(topic==45,'law court legal act laws state case cases legislation decision',
                               ifelse(topic==131,'girls woman young man girl boys love mother good boy',
                               ifelse(topic==192,'school education schools primary educational secondary girls teachers',
                               ifelse(topic==88,'immigration illegal aliens legal citizens citizenship alien status',
@@ -297,17 +297,17 @@ ggplot(data=demog,aes(x=year,y=size,color=field)) + geom_line() +
 dev.off()
 
 #figure 7
-stops <- c(24,30,124,185,135,43) #topics more prevalent in sociology
+stops <- c(24,30,124,130,135,43) #topics more prevalent in sociology
 soc <- all %>% filter(topic %in% stops) #keep only topics more prevalent in sociology
 #create factor variable to control graphing order
 soc <- soc %>% mutate(top=ifelse(topic==24,1,ifelse(topic==30,2,
-                          ifelse(topic==124,3,ifelse(topic==185,4,
+                          ifelse(topic==124,3,ifelse(topic==130,4,
                           ifelse(topic==135,5,6))))))
 #add factor labels
 soc$top=factor(soc$top, labels=c('items table sample scale behavior scores subjects significant',
                                 'areas city metropolitan segregation cities area residential central',
                                 'mobility occupational status occupation occupations prestige american',
-                                'society cultural traditional culture system societies values life',
+                                'role relationship relationships roles relations york expectations',
                                 'marriage family adjustment marital marriage counseling living life',
                                 'religious religion catholic church catholics attendance religiosity'))
 png('./fig7.png',height=1000,width=750)
