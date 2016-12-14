@@ -281,13 +281,20 @@ dev.off()
 #figure 6
 dtops <- c(47,129,93,38,168,87) #topics more prevalent in demography
 demog <- all %>% filter(topic %in% dtops) #keep only topics more prevalent in demography
-#add topic lables
-demog <- demog %>% mutate(top=ifelse(topic==47,'contraceptive method contraception methods contraceptives pill',
-                              ifelse(topic==129,'birth births parity interval months order intervals live',
-                              ifelse(topic==93,'size preferences preference children intentions desired ideal sons',
-                              ifelse(topic==38,'family planning program programs studies bangladesh contraceptive',
-                              ifelse(topic==168,'iud acceptors rates acceptance months continuation program users',
-                              ifelse(topic==87,'reproductive infertility menstrual reproduction cycle human days cycles','')))))))
+#create factor variable to control graphing order
+demog <- demog %>% mutate(top=(ifelse(topic==47,4,
+                              ifelse(topic==129,1,
+                              ifelse(topic==93,2,
+                              ifelse(topic==38,5,
+                              ifelse(topic==168,6,
+                              ifelse(topic==87,3,0)))))))) %>% filter(top!=0)
+#add factor labels
+demog$top <- factor(demog$top, labels=c('birth births parity interval months order intervals live',
+                       'size preferences preference children intentions desired ideal sons',
+                       'reproductive infertility menstrual reproduction cycle human days cycles',
+                       'contraceptive method contraception methods contraceptives pill',
+                       'family planning program programs studies bangladesh contraceptive',
+                       'iud acceptors rates acceptance months continuation program users'))
 png('./fig6.png',height=1000,width=750)
 ggplot(data=demog,aes(x=year,y=size,color=field)) + geom_line() + 
   facet_wrap(~ top,nrow=3,scales="free_y") + theme_bw() + scale_y_continuous(labels=scales::percent) +
