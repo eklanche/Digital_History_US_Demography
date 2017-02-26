@@ -48,10 +48,12 @@ t71 <- docdoi %>% select(size=`topic 71`,doi) %>% mutate(topic=71) #newer vocabu
 race <- left_join(articles,left_join(rbind(t3,t71),tops)) %>% group_by(year,words) %>% summarise(size=sum(size)) %>% mutate(topic=factor(words))
 race$topic <- factor(race$topic,levels=rev(levels(race$topic)))
 tiff('./fig1.tif',height=2000,width=4000,res=300)
-ggplot(data=race,aes(x=year,y=size,color=topic, order=-as.numeric(topic))) + geom_line() + theme_bw() +
+#png('./fig1.png',height=500,width=1000)
+ggplot(data=race,aes(x=year,y=size,linetype=topic, order=-as.numeric(topic))) + geom_line() + theme_bw() +
   labs(x='Year',y='Number of Articles',title='Figure 1: Vocabularies of Racial Inequality',color='Topic:') + 
-  scale_color_manual(values=c("black", "gray75")) + theme(legend.position="bottom") +
-  guides(color=guide_legend(nrow=2)) + scale_y_continuous(limits=c(0,10),breaks=c(0,2,4,6,8,10)) +
+  #scale_color_manual(values=c("black", "gray75")) + 
+  theme(legend.position="bottom") +
+  guides(linetype=guide_legend(nrow=2)) + scale_y_continuous(limits=c(0,10),breaks=c(0,2,4,6,8,10)) +
   scale_x_continuous(limits=c(1915,1985),breaks=seq(1915,1985,5))
 dev.off()
 
@@ -98,9 +100,11 @@ other <- merge(other,docdoi,by='doi',all.x=TRUE)
 #all articles before 1947
 arts <- rbind(ear,other) %>% mutate(articles=1) %>% group_by(year,field) %>% summarize(articles=sum(articles))
 tiff('./fig2.tif',height=2000,width=4000,res=300)
-ggplot(data=arts,aes(x=year,y=articles,color=field)) + geom_line() + theme_bw() + 
+#png('./fig2.png',height=500,width=1000)
+ggplot(data=arts,aes(x=year,y=articles,linetype=field)) + geom_line() + theme_bw() + 
   labs(x='Year',y='Number of Articles',title='Figure 2: Population-Related Articles by Author Field, 1915-1946',color='Field:') + 
-  scale_color_manual(values=c("black", "gray75")) + theme(legend.position="bottom") +
+  #scale_color_manual(values=c("black", "gray75")) + 
+  theme(legend.position="bottom") +
   scale_x_continuous(breaks=seq(1915,1945,5))
 dev.off()
 
@@ -171,10 +175,12 @@ demog$top <- factor(demog$top,labels=c('rate rates increase year total birth per
                                         'birth births parity interval months order intervals live conception born',
                                         'contraceptive method contraception methods contraceptives pill pregnancy'))
 tiff('./fig3.tif',height=4000,width=3500,res=300)
-ggplot(data=demog,aes(x=year,y=size,color=field)) + geom_line() + 
+#png('./fig3.png',height=1000,width=800)
+ggplot(data=demog,aes(x=year,y=size,linetype=field)) + geom_line() + 
   facet_wrap(~ top,nrow=3,scales="free_y") + theme_bw() + scale_y_continuous(labels=scales::percent) +
   labs(x='Year',y='Percent of Field (3-year moving average)',title='Figure 3: Topics More Prevalent in Demography, 1915-1946',color='Field:') + 
-  scale_color_manual(values=c("black", "gray75")) + theme(legend.position="bottom") +
+  #scale_color_manual(values=c("black", "gray75")) + 
+  theme(legend.position="bottom") +
   scale_x_continuous(breaks=seq(1915,1945,5))
 dev.off()
 
@@ -188,10 +194,12 @@ other <- other%>% mutate(top=ifelse(topic==146,'marriage kinship kin sons son da
                               ifelse(topic==88,'immigration illegal aliens legal citizens citizenship alien status',
                               'japan trade japanese foreign economic exports countries investment'))))))
 tiff('./fig4.tif',height=4000,width=3500,res=300)
-ggplot(data=other,aes(x=year,y=size,color=field)) + geom_line() + 
+#png('./fig4.png',height=1000,width=800)
+ggplot(data=other,aes(x=year,y=size,linetype=field)) + geom_line() + 
   facet_wrap(~ top,nrow=3,scales="free_y") + theme_bw() + scale_y_continuous(labels=scales::percent) +
   labs(x='Year',y='Percent of Field (3-year moving average)',title='Figure 4: Topics More Prevalent in Other Social Sciences, 1915-1946',color='Field:') + 
-  scale_color_manual(values=c("black", "gray75")) + theme(legend.position="bottom") +
+  #scale_color_manual(values=c("black", "gray75")) + 
+  theme(legend.position="bottom") +
   scale_x_continuous(breaks=seq(1915,1945,5))
 dev.off()
 
@@ -272,9 +280,11 @@ all <- rbind(demog,sociology)
 #figure 5
 arts <- select(keep,field,year,art) %>% group_by(year,field) %>%summarise(articles=sum(art))
 tiff('./fig5.tif',height=2000,width=4000,res=300)
-ggplot(data=arts,aes(x=year,y=articles,color=field)) + geom_line() + theme_bw() + 
+#png('./fig5.png',height=500,width=1000)
+ggplot(data=arts,aes(x=year,y=articles,linetype=field)) + geom_line() + theme_bw() + 
   labs(x='Year',y='Number of Articles',title='Figure 5: Population-Related Articles by Journal Field, 1947-1984',color='Field:') + 
-  scale_color_manual(values=c("black", "gray75")) + theme(legend.position="bottom") +
+  #scale_color_manual(values=c("black", "gray75")) + 
+  theme(legend.position="bottom") +
   scale_x_continuous(breaks=seq(1945,1985,5))
 dev.off()
 
@@ -296,10 +306,12 @@ demog$top <- factor(demog$top, labels=c('birth births parity interval months ord
                        'family planning program programs studies bangladesh contraceptive',
                        'iud acceptors rates acceptance months continuation program users'))
 tiff('./fig6.tif',height=4000,width=3500,res=300)
-ggplot(data=demog,aes(x=year,y=size,color=field)) + geom_line() + 
+#png('./fig6.png',height=1000,width=800)
+ggplot(data=demog,aes(x=year,y=size,linetype=field)) + geom_line() + 
   facet_wrap(~ top,nrow=3,scales="free_y") + theme_bw() + scale_y_continuous(labels=scales::percent) +
   labs(x='Year',y='Percent of Field',title='Figure 6: Topics More Prevalent in Demography, 1947-1984',color='Field:') + 
-  scale_color_manual(values=c("black", "gray75")) + theme(legend.position="bottom") +
+  #scale_color_manual(values=c("black", "gray75")) + 
+  theme(legend.position="bottom") +
   scale_x_continuous(breaks=seq(1945,1985,5))
 dev.off()
 
@@ -318,10 +330,12 @@ soc$top=factor(soc$top, labels=c('items table sample scale behavior scores subje
                                 'marriage family adjustment marital marriage counseling living life',
                                 'religious religion catholic church catholics attendance religiosity'))
 tiff('./fig7.tif',height=4000,width=3500,res=300)
-ggplot(data=soc,aes(x=year,y=size,color=field)) + geom_line() + 
+#png('./fig7.png',height=1000,width=800)
+ggplot(data=soc,aes(x=year,y=size,linetype=field)) + geom_line() + 
   facet_wrap(~ top,nrow=3,scales="free_y") + theme_bw() + scale_y_continuous(labels=scales::percent) +
   labs(x='Year',y='Percent of Field',title='Figure 7: Topics More Prevalent in Sociology, 1947-1984',color='Field:') + 
-  scale_color_manual(values=c("black", "gray75")) + theme(legend.position="bottom") +
+  #scale_color_manual(values=c("black", "gray75")) + 
+  theme(legend.position="bottom") +
   scale_x_continuous(breaks=seq(1945,1985,5))
 dev.off()   
 
